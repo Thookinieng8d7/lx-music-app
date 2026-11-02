@@ -28,17 +28,28 @@ jobs:
           npm config set fetch-retry-maxtimeout 120000
           npm install --legacy-peer-deps
 
-      - name: 開始編譯 Android Debug APK
+      - name: 生成臨時簽名金鑰配置
+        run: |
+          cd android
+          keytool -genkeypair -v -storetype PKCS12 -keystore release.keystore -alias my-key-alias -keyalg RSA -keysize 2048 -validity 10000 -storepass 123456 -keypass 123456 -dname "CN=lxmusic, OU=app, O=lx, L=City, ST=State, C=CN"
+          cat <<EOF > keystore.properties
+          storePassword=123456
+          keyPassword=123456
+          keyAlias=my-key-alias
+          storeFile=release.keystore
+          EOF
+
+      - name: 開始編譯 Android APK
         run: |
           cd android
           chmod +x gradlew
           export GRADLE_OPTS="-Xmx4096m -XX:MaxMetaspaceSize=1024m"
-          ./gradlew assembleDebug --no-daemon --stacktrace
+          ./gradlew assembleRelease --no-daemon
 
       - name: 上傳打包好的 APK 產物
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: LXMusic-Android-Debug
-          path: android/app/build/outputs/apk/debug/*.apk
+          name: LXMusic-Android-Release
+          path: android/app/build/outputs/apk/**/*.apk
           retention-days: 7
