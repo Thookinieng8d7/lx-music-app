@@ -26,16 +26,16 @@ jobs:
       - name: 安裝專案依賴庫
         run: npm install --legacy-peer-deps
 
-      - name: 開始編譯 Android Release APK
+      - name: 開始編譯 Android Debug APK
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleRelease --no-daemon
+          ./gradlew assembleDebug --no-daemon
 
       - name: 上傳打包好的 APK 產物
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: LXMusic-Android-Release
-          path: android/app/build/outputs/apk/release/*.apk
+          name: LXMusic-Android-Debug
+          path: android/app/build/outputs/apk/debug/*.apk
           retention-days: 7
