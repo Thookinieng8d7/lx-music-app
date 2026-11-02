@@ -32,7 +32,8 @@ jobs:
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug --no-daemon
+          export GRADLE_OPTS="-Xmx4096m -XX:MaxMetaspaceSize=1024m"
+          ./gradlew assembleDebug --no-daemon --stacktrace
 
       - name: 上傳打包好的 APK 產物
         uses: actions/upload-artifact@v4
