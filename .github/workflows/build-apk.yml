@@ -14,15 +14,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
+          cache: 'npm'
 
       - name: 設定 Java 環境 (JDK 17)
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
-
-      - name: 設定 Android SDK 環境
-        uses: android-actions/setup-android@v3
+          cache: 'gradle'
 
       - name: 安裝專案依賴庫
         run: npm install --legacy-peer-deps
@@ -35,6 +34,7 @@ jobs:
 
       - name: 上傳打包好的 APK 產物
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: LXMusic-Android-Release
           path: android/app/build/outputs/apk/release/*.apk
