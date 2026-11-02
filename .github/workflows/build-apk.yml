@@ -38,6 +38,8 @@ jobs:
           keyAlias=my-key-alias
           storeFile=release.keystore
           EOF
+          cp release.keystore app/
+          cp keystore.properties app/
 
       - name: 開始編譯 Android APK
         run: |
